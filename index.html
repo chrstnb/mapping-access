@@ -1,0 +1,614 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="/images/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="/images/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192"  href="/images/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+        <link rel="manifest" href="/images/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="/images/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
+
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Mapping Access</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    </head>
+    <body>
+    <div class="intro">
+      <h1>Mapping Access</h1>
+       <p>A recent report found that 7 states (highlighted in purple) have been using federal TANF (Temporary Assistance for Needy Families) money to fund anti-abortion propaganda and clinics called crisis pregnancy centers. This map shows crisis pregnancy centers across the country, many of which are run by churches and other non-profit organizations. Not all CPCs are ambiguous about what services the will and will not provide, but it's not uncommon for women to go to a CPC assuming they'll be able to get an abortion only to be coerced into other options. Also mapped are Planned Parenthood clinics that are listed on their website as abortion providers, Planned Parenthood clinics that will refer women to places they can receive an abortion and Planned Parenthood clinics with no abortion services listed. It's ambiguous whether these clinics area able to help women receive abortions or not, however they fall mostly in areas where access is already limited by state legislation. The map also shows abortion providers around the country other than Planned Parenthood clinics.</p> 
+       <p>Sources: <a href="https://www.plannedparenthood.org/health-center" target="blank">Planned Parenthood</a> | <a href="http://www.lifecall.org/index.html" target="blank">Crisis Pregnancy Centers</a> | <a href="https://prochoice.org/think-youre-pregnant/find-a-provider/" target="blank">Abortion Providers</a> | <a href="https://thinkprogress.org/tanf-cpcs-ec002305dd18#.rvavbx8qi" target="blank">TANF Spending</a></p>
+    </div>
+  <div class="map-wrap">
+    <!-- <button data-toggle="on">TANF states</button> -->
+    <label class="selected" sublabel="CPC"><input type="checkbox" checked value="CPC">Crisis Pregnancy Center</label>
+    <label class="selected" sublabel="PP"><input type="checkbox" checked value="PP">Planned Parenthood: Abortion Provider</label>
+    <label class="selected" sublabel="PP-R"><input type="checkbox" checked value="PP-R">Planned Parenthood: Abortion Referral</label>
+    <label class="selected" sublabel="PP-NA"><input type="checkbox" checked value="PP-NA">Planned Parenthood: No Abortion Services</label>
+    <label class="selected" sublabel="AP"><input type="checkbox" checked value="AP">Abortion Provider</label>
+
+    <div id="map"></div>
+  </div>
+    
+    <script>
+      var map;
+      var overlay;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: new google.maps.LatLng(39.0,-94.5),
+          disableDefaultUI: true,
+          styles: [
+            {
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#ebe3cd"
+                }
+              ]
+            },
+            {
+              "elementType": "labels.icon",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#523735"
+                }
+              ]
+            },
+            {
+              "elementType": "labels.text.stroke",
+              "stylers": [
+                {
+                  "color": "#f5f1e6"
+                },
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                {
+                  "color": "#c9b2a6"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.country",
+              "stylers": [
+                {
+                  "visibility": "on"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.country",
+              "elementType": "labels.text",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.land_parcel",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.land_parcel",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                {
+                  "color": "#dcd2be"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.land_parcel",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#ae9e90"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.locality",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.neighborhood",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.province",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#412a27"
+                },
+                {
+                  "visibility": "on"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.province",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                {
+                  "visibility": "on"
+                }
+              ]
+            },
+            {
+              "featureType": "landscape.natural",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#e5e5e5"
+                }
+              ]
+            },
+            {
+              "featureType": "poi",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#dfd2ae"
+                }
+              ]
+            },
+            {
+              "featureType": "poi",
+              "elementType": "labels.text",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#93817c"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "geometry.fill",
+              "stylers": [
+                {
+                  "color": "#a5b076"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#447530"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#f5f1e6"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "labels",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "labels.icon",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "road.arterial",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#fdfcf8"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#f8c967"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                {
+                  "color": "#e9bc62"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway.controlled_access",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#e98d58"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway.controlled_access",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                {
+                  "color": "#db8555"
+                }
+              ]
+            },
+            {
+              "featureType": "road.local",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#806b63"
+                }
+              ]
+            },
+            {
+              "featureType": "transit",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "transit.line",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#dfd2ae"
+                }
+              ]
+            },
+            {
+              "featureType": "transit.line",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#8f7d77"
+                }
+              ]
+            },
+            {
+              "featureType": "transit.line",
+              "elementType": "labels.text.stroke",
+              "stylers": [
+                {
+                  "color": "#ebe3cd"
+                }
+              ]
+            },
+            {
+              "featureType": "transit.station",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#dfd2ae"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "geometry.fill",
+              "stylers": [
+                {
+                  "color": "#b9d3c2"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#92998d"
+                }
+              ]
+            }
+          ]
+
+      });
+      var imageBounds = {
+          north: 48.999911,
+          south: 45.935246,
+          east: -96.563666,
+          west: -104.048708
+        };
+        var imageBounds2 = {
+          north: 36.494078,
+          south: 25.838455,
+          east: -93.507573,
+          west: -106.644730
+        };
+        var imageBounds3 = {
+          north: 40.609186,
+          south: 35.996565,
+          east: -89.098235,
+          west: -95.768919
+        };
+        var imageBounds4 = {
+          north: 41.756123,
+          south: 37.776833,
+          east: -84.785403,
+          west: -88.095486
+        };
+        var imageBounds5 = {
+          north: 41.976673,
+          south: 38.409002,
+          east: -80.530614,
+          west: -84.823510
+        };
+        var imageBounds6 = {
+          north: 42.272219,
+          south: 39.717758,
+          east: -74.696130,
+          west: -80.525492
+        };
+        var imageBounds7 = {
+          north: 47.475005,
+          south: 41.748288,
+          east: -82.430968,
+          west: -90.386523
+        };
+
+        overlay = new google.maps.GroundOverlay(
+            'ND.png',
+            imageBounds);
+        overlay.setMap(map);
+        overlay = new google.maps.GroundOverlay(
+            'TX.png',
+            imageBounds2);
+        overlay.setMap(map);
+        overlay = new google.maps.GroundOverlay(
+            'MO.png',
+            imageBounds3);
+        overlay.setMap(map);
+        overlay = new google.maps.GroundOverlay(
+            'IN.png',
+            imageBounds4);
+        overlay.setMap(map);
+        overlay = new google.maps.GroundOverlay(
+            'OH.png',
+            imageBounds5);
+        overlay.setMap(map);
+        overlay = new google.maps.GroundOverlay(
+            'PA.png',
+            imageBounds6);
+        overlay.setMap(map);
+        overlay = new google.maps.GroundOverlay(
+            'MI.png',
+            imageBounds7);
+        overlay.setMap(map);
+      };
+
+      var markers = new Array();
+      var results2;
+        var script = document.createElement('script');
+        script.src = 'map.json';
+        document.getElementsByTagName('head')[0].appendChild(script);
+
+        window.eqfeed_callback = function(results) {
+            results2 = results;
+            for (var i = 0; i < results.features.length; i++) {
+                var coords = results.features[i].geometry.coordinates;
+                var text = results.features[i].properties.Text;
+                var latLng = new google.maps.LatLng(coords[1],coords[0]);
+                if (text == "CPC") {
+                    var marker = new google.maps.Marker({
+                    position: latLng,
+                    icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: '#b21c57',
+                    fillOpacity: 0.5,
+                    scale: 4,
+                    strokeColor: '#b21c57',
+                    strokeWeight: 1
+                    },
+                    map: map
+                  });
+                markers.push(marker);
+                }
+                if (text == "AP") {
+                    var marker = new google.maps.Marker({
+                    position: latLng,
+                    icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: '#d9c1a5',
+                    fillOpacity: 0.5,
+                    scale: 4,
+                    strokeColor: '#d9c1a5',
+                    strokeWeight: 1
+                    },
+                    map: map
+                  });
+                markers.push(marker);
+                }
+                if (text == "PP") {
+                    var marker = new google.maps.Marker({
+                    position: latLng,
+                    icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: '#41458c',
+                    fillOpacity: 0.5,
+                    scale: 4,
+                    strokeColor: '#41458c',
+                    strokeWeight: 1
+                    },
+                    map: map
+                  });
+                markers.push(marker);
+                }
+                if (text == "PP-NA") {
+                    var marker = new google.maps.Marker({
+                    position: latLng,
+                    icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: '#7c8050',
+                    fillOpacity: 0.5,
+                    scale: 4,
+                    strokeColor: '#7c8050',
+                    strokeWeight: 1
+                    },
+                    map: map
+                  });
+                markers.push(marker);
+                }
+                if (text == "PP-R") {
+                    var marker = new google.maps.Marker({
+                    position: latLng,
+                    icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: '#e2781c',
+                    fillOpacity: 0.5,
+                    scale: 4,
+                    strokeColor: '#e2781c',
+                    strokeWeight: 1
+                    },
+                    map: map
+                  });
+                markers.push(marker);
+                }
+            }       
+        }
+      function show(category) {
+        for (var i=0; i<results2.features.length; i++) {
+          if (results2.features[i]['properties'].Text == category) {
+            markers[i].setVisible(true);
+          }
+        }
+      }
+      function hide(category) {
+        for (var i=0; i<results2.features.length; i++) {
+          if (results2.features[i]['properties'].Text == category) {          
+            markers[i].setVisible(false);
+          }
+        }
+      }  
+    </script>
+    <scrip>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8I2y0VDS-CvDU8h7ksE1yhnq0UcpWlnk&callback=initMap">
+    </script>
+
+
+        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='https://www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X','auto');ga('send','pageview');
+        </script>
+    </body>
+</html>
